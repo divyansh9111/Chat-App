@@ -16,7 +16,7 @@ const chatSchema=mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
     },
-},{timeStamps:true});//timeStamps for the time when the chat is created.
+},{timestamps:true});//timeStamps for the time when the chat is created.
 
 //Chat model
 const Chat=new mongoose.model("Chat",chatSchema);

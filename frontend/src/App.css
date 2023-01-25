@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
-.App{
-    min-height: 100vh;
-    display: flex;
-    background-image: url('./pexels-ylanite-koppens-796607.jpg');
-    background-size: cover;
-    background-position: center;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
+.App {
+  min-height: 100vh;
+  display: flex;
+  background-color: #ebf0f4;
+  background-size: cover;
+  background-position: center;
 }
