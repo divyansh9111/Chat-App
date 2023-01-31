@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../model/userModel");
 //User registration api
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, picture, confirmPassword } = req.body;
+  const { name, email, password,  confirmPassword,picture } = req.body;
   if (!name || !email || !password || !confirmPassword) {
     res.status(400);
     throw new Error("Please enter all the fields");
@@ -19,6 +19,7 @@ const registerUser = asyncHandler(async (req, res) => {
       email: email,
       password: password,
       confirmPassword: confirmPassword,
+      picture: picture,
     });
     const token = await newUser.generateAuthToken();
     res.cookie("jwt", token, {
@@ -69,11 +70,11 @@ const authUser = asyncHandler(async (req, res) => {
       });
     } else {
       res.status(400);
-      throw new Error("Password does not match!");
+      throw new Error("Invalid login details!");
     }
   } else {
     res.status(400);
-    throw new Error("No such user found");
+    throw new Error("No such user found!");
   }
 });
 
