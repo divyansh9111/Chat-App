@@ -23,7 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
     const token = await newUser.generateAuthToken();
     res.cookie("jwt", token, {
-      expires: new Date(Date.now() + 60000),
+      expires: new Date(Date.now() + 60*1000*60),
       httpOnly: true,
     });
     await newUser.save();
@@ -61,7 +61,7 @@ const authUser = asyncHandler(async (req, res) => {
     if (await foundUser.matchPassword(password)) {
       const token = await foundUser.generateAuthToken();
       res.cookie("jwt", token, {
-        expires: new Date(Date.now() + 60000),
+        expires: new Date(Date.now() + 60*1000*60),
         httpOnly: true,
       });
       res.status(200).json({
@@ -78,4 +78,19 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser };
+// /api/user?search=ajay
+const allUsers=asyncHandler(async(req,res)=>{
+  const keyword=req.query.search?
+  {
+    $or:[
+      {name:{$regex:req.query.search,$options:"i"}},
+      {email:{$regex:req.query.search,$options:"i"}},
+    ]
+  }
+  :{};
+  const users=await User.find(keyword).find({_id:{$ne:req.user._id}});
+  // console.log("userController.js 92"+req.user._id);
+  res.send({users});
+});
+
+module.exports = { registerUser, authUser ,allUsers};

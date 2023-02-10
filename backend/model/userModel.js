@@ -31,7 +31,7 @@ userSchema.methods.matchPassword=async function(enteredPass){
 
 userSchema.methods.generateAuthToken=async function(){
     try {
-        const token=await jwt.sign({_id:this._id},`${process.env.SECRET_KEY}`);//toString used here bcs its an object and literal is imp here.
+        const token=await jwt.sign({_id:this._id},`${process.env.JWTCODE}`);//toString used here bcs its an object and literal is imp here.
         console.log(token);
         this.tokens=this.tokens.concat({token});
         
