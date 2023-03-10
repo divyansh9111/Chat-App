@@ -3,10 +3,13 @@ import { Container, Tabs, TabList, TabPanels, Tab, TabPanel,Box,Text } from "@ch
 import Login from "../Components/Authentication/Login";
 import SignUp from "../Components/Authentication/SignUp";
 import { useHistory } from "react-router-dom";
+import { ChatState } from "../context/ChatProvider";
 const HomePage = () => {
+  const{Cookies}=ChatState();
   const history=useHistory();
   useEffect(()=>{
-      const user=JSON.parse(localStorage.getItem("userInfo"));
+      const cookieData=Cookies.get('userInfo');
+      const user=cookieData?JSON.parse(cookieData):{}; 
       console.log(user);
       if (user) {
           history.push("/chats");
