@@ -8,4 +8,5 @@ router.route('/group').post(auth.auth,chatController.createGroupChat);
 router.route("/rename").patch(auth.auth,chatController.renameGroup);
 router.route("/addGroup").patch(auth.auth,chatController.addToGroup);
 router.route("/removeGroup").patch(auth.auth,chatController.removeFromGroup);
+router.route("/updateAdmin").patch(auth.auth,chatController.updateAdmin);
 module.exports =router;

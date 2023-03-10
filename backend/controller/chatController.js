@@ -59,7 +59,7 @@ const createGroupChat=asyncHandler(async(req,res)=>{
     }
 
     let users=JSON.parse(req.body.users);
-    users.push(req.user);
+    users.unshift(req.user);
 
     try {
         const groupChat=await Chat.create({
@@ -114,4 +114,17 @@ const removeFromGroup=asyncHandler(async(req,res)=>{
         res.status(200).json(removed);
     }
 });
-module.exports={accessChat,fetchChats,createGroupChat,renameGroup,addToGroup,removeFromGroup};
+const updateAdmin=asyncHandler(async(req,res)=>{
+    const{chatId}=req.body;
+    console.log("updateAdmin");
+    const foundChat=await Chat.findOne({_id:chatId});
+    const newAdminId=foundChat.users[0]._id;
+    const updatedChat=await Chat.findByIdAndUpdate(chatId,{groupAdmin:newAdminId},{new:true}).populate("users","-password").populate("groupAdmin","-password");
+    if (!updatedChat) {
+        res.status(400);
+        throw new Error("Chat not found");
+    } else {
+        res.status(200).json(updatedChat);
+    }
+});
+module.exports={accessChat,fetchChats,createGroupChat,renameGroup,addToGroup,removeFromGroup,updateAdmin};

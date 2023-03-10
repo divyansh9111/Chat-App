@@ -65,8 +65,11 @@ const authUser = asyncHandler(async (req, res) => {
         httpOnly: true,
       });
       res.status(200).json({
-        email: email,
-        password: password,
+        _id: foundUser._id,
+        name: foundUser.name,
+        email: foundUser.email,
+        picture: foundUser.picture,
+        token: token,
       });
     } else {
       res.status(400);
@@ -90,6 +93,7 @@ const allUsers=asyncHandler(async(req,res)=>{
   :{};
   const users=await User.find(keyword).find({_id:{$ne:req.user._id}});
   // console.log("userController.js 92"+req.user._id);
+  // console.log("userController.js 92"+users);
   res.send({users});
 });
 

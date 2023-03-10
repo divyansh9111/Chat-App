@@ -12,6 +12,7 @@ import {ViewIcon, ViewOffIcon} from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
 import Axios from 'axios';
 import { useHistory } from "react-router-dom";
+import { ChatState } from '../../context/ChatProvider';
 const Login = () => {
   const [show1, setShow1] = useState(false);
   const [email, setEmail] = useState("");
@@ -19,7 +20,6 @@ const Login = () => {
   const toast=useToast();
   const [loading,setLoading]=useState(false);
   const history=useHistory();
-
   const handleSubmit=async()=>{
     setLoading(true);
     if (!email||!password) {
@@ -52,7 +52,7 @@ const Login = () => {
       });
       localStorage.setItem("userInfo",JSON.stringify(data));
       setLoading(false);
-      history.push('/chats');
+      history.go('/chats');
     } catch (error) {
       toast({
         title: "Error!",

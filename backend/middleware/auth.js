@@ -5,8 +5,8 @@ const User = require("../model/userModel");
 
 const auth=asyncHandler(async (req,res,next)=>{
     try {
-       const token =req.cookies.jwt;
-       console.log(token);
+       const token =req.cookies.jwt||req.headers.authorization.split(" ")[1];
+       console.log(`auth.js 9 ${token}`);
       const verifyUser= jwt.verify(token,`${process.env.JWTCODE}`);//returns user id
       const foundUser=await User.findById(verifyUser).select("-password -confirmPAssword");
       req.user=foundUser;
