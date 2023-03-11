@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Axios from 'axios';
 import { useToast } from "@chakra-ui/react";
+import { ChatState } from "../../context/ChatProvider";
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const history=useHistory();
   const toast = useToast();
-
+  const{Cookies}=ChatState();
   const postDetails = async(pic) => {
     setLoading(true);
 
@@ -118,7 +119,7 @@ const SignUp = () => {
         duration: 5000,
         isClosable: true,
       });
-      localStorage.setItem("userInfo",JSON.stringify(data));
+      Cookies.set('userInfo',JSON.stringify(data),{expires:new Date(Date.now() + 60*1000*60)});
       setLoading(false);
       history.go('/chats');
     } catch (error) {

@@ -20,6 +20,7 @@ const Login = () => {
   const toast=useToast();
   const [loading,setLoading]=useState(false);
   const history=useHistory();
+  const{Cookies}=ChatState();
   const handleSubmit=async()=>{
     setLoading(true);
     if (!email||!password) {
@@ -50,7 +51,7 @@ const Login = () => {
         duration: 5000,
         isClosable: true,
       });
-      localStorage.setItem("userInfo",JSON.stringify(data));
+      Cookies.set('userInfo',JSON.stringify(data),{expires:new Date(Date.now() + 60*1000*60)});
       setLoading(false);
       history.go('/chats');
     } catch (error) {

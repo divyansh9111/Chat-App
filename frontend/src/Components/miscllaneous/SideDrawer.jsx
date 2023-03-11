@@ -21,6 +21,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
+import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ChatState } from "../../context/ChatProvider";
@@ -33,11 +34,11 @@ const SideDrawer = () => {
   const [searchResult, setSearchResult] = useState({}); //used parenthesis bcs its an object.
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const { user, setSelectedChat, chats, setChats,Cookies } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   const toast = useToast();
-
+  
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
@@ -72,7 +73,7 @@ const SideDrawer = () => {
   const logoutHandler = () => {
     let text = "Log out of the website?";
     if (window.confirm(text) === true) {
-      localStorage.removeItem("userInfo");
+      Cookies.remove('userInfo');
       history.push("/");
     }
   };

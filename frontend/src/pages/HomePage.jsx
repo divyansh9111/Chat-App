@@ -9,8 +9,8 @@ const HomePage = () => {
   const history=useHistory();
   useEffect(()=>{
       const cookieData=Cookies.get('userInfo');
-      const user=cookieData?JSON.parse(cookieData):{}; 
-      console.log(user);
+      const user=cookieData&&JSON.parse(cookieData); 
+      // console.log(user);
       if (user) {
           history.push("/chats");
       }

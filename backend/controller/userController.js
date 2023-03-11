@@ -77,7 +77,7 @@ const authUser = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(400);
-    throw new Error("No such user found!");
+    throw new Error("No user found with this email!");
   }
 });
 

@@ -11,11 +11,13 @@ const ChatsPage = () => {
   const {user}=ChatState();
   const[fetchAgain,setFetchAgain]=useState(false);
   const history = useHistory();
+  const{Cookies}=ChatState();
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    // console.log("user"+userInfo);
+    const cookieData=Cookies.get('userInfo');
+      const user=cookieData&&JSON.parse(cookieData); 
+    // console.log(user);
     // console.log("history"+history);
-    if (!userInfo&&history ) {
+    if (!user&&history ) {
       history.push("/");
       
     }

@@ -9,7 +9,8 @@ const ChatProvider = ({ children }) => {
   const[chats,setChats]=useState([]);
   const history = useHistory();
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const cookieData=Cookies.get('userInfo');
+    const userInfo=cookieData&&JSON.parse(cookieData); 
     console.log("user"+userInfo);
     console.log("history"+history);
     setUser(userInfo);
