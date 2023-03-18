@@ -24,7 +24,7 @@ import { ChatState } from "../../context/ChatProvider";
 import UserListItem from "../UserListItem";
 import UserTag from "../UserTag";
 
-const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessages }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -161,6 +161,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
           ? setSelectedChat("")
           : setSelectedChat(data._id);
         setFetchAgain(!fetchAgain);
+        fetchMessages();
         setLoading(false);
       } catch (error) {
         toast({

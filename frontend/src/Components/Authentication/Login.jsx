@@ -51,7 +51,7 @@ const Login = () => {
         duration: 5000,
         isClosable: true,
       });
-      Cookies.set('userInfo',JSON.stringify(data),{expires:new Date(Date.now() + 60*1000*60)});
+      Cookies.set('userInfo',JSON.stringify(data),{expires:new Date(Date.now() + 60*1000*60*12)});
       setLoading(false);
       history.go('/chats');
     } catch (error) {
