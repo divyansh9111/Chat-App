@@ -1,4 +1,6 @@
 const asyncHandler = require("express-async-handler");
+const Chat = require("../model/chatModel");
+const Message = require("../model/messageModel");
 const User = require("../model/userModel");
 //User registration api
 const registerUser = asyncHandler(async (req, res) => {

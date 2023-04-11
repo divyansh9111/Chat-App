@@ -15,18 +15,18 @@ const UserListItem = (props) => {
       mb={2}
       borderRadius={"md"}
       onClick={props.handleClick}
+      overflowX={"scroll"}
     >
       <Avatar
         cursor={"pointer"}
         marginRight={2}
-        size={"xs"}
+        size={{base:"md",md:"xs"}}
         name={props.user.name}
         src={props.user.picture}
       />
       <Box>
-        <Text fontSize={"xs"}>{props.user.name}</Text>
-        <Text fontSize={"xs"}>
-          <b>Email: </b>
+        <Text fontSize={{base:"md",md:"xs"}}>{props.user.name}</Text>
+        <Text fontSize={{base:"md",md:"xs"}}>
           {props.user.email}
         </Text>
       </Box>

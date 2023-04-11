@@ -19,26 +19,35 @@ import {
   DrawerCloseButton,
   useToast,
   Spinner,
+  MenuItem,
 } from "@chakra-ui/react";
+import { Badge } from "antd";
 import axios from "axios";
 import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { getSender } from "../../config/chatLogic";
 import { ChatState } from "../../context/ChatProvider";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserListItem";
 import ProfileModal from "./ProfileModal";
-
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState({}); //used parenthesis bcs its an object.
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-  const { user, setSelectedChat, chats, setChats,Cookies } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    Cookies,
+    notifications,
+    setNotifications,
+  } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   const toast = useToast();
-  
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
@@ -56,7 +65,8 @@ const SideDrawer = () => {
       setLoading(false);
       setSearchResult(data);
       // console.log(typeof(searchResult));
-      // console.log((searchResult));
+      // console.log(searchResult);
+      // console.log(data);
     } catch (error) {
       toast({
         title: "Error!",
@@ -73,7 +83,7 @@ const SideDrawer = () => {
   const logoutHandler = () => {
     let text = "Log out of the website?";
     if (window.confirm(text) === true) {
-      Cookies.remove('userInfo');
+      Cookies.remove("userInfo");
       history.push("/");
     }
   };
@@ -118,6 +128,64 @@ const SideDrawer = () => {
       });
     }
   };
+  const getFullChat = (chatId) => {
+    return chats.find((chat) => {
+      return chat._id === chatId;
+    });
+  };
+  const changeTime = (str) => {
+    let date = new Date(str);
+    let offset = date.getTimezoneOffset();
+    let indiaTime = new Date(
+      date.getTime() + offset * 60 * 1000 + 330 * 60 * 1000
+    );
+    let hours = indiaTime.getHours();
+    let minutes = indiaTime.getMinutes();
+
+    let ampm = hours >= 12 ? "PM" : "AM";
+
+    hours %= 12;
+    hours = hours || 12; // the hour '0' should be '12'
+
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+
+    return `${hours}:${minutes} ${ampm}`;
+  };
+  const updateNotifications = async (chatId) => {
+    let msgId = notifications.find((n) => {
+      return n.chat || n.chat._id === chatId;
+    })._id;
+
+    if (msgId) {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+        const { data } = await axios.delete(
+          `/api/notification?messageId=${msgId}&userId=${user._id}`,
+          config
+        );
+        // let newData = data;
+        // setNotifications(newData);
+      } catch (error) {
+        if (error.response.data.message === "User is not authorized!") {
+          Cookies.remove("userInfo");
+          history.go("/");
+        }
+        toast({
+          title: "Error!",
+          variant: "subtle",
+          position: "bottom-left",
+          description: error.response.data.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
+  };
   return (
     <>
       <Box
@@ -144,14 +212,85 @@ const SideDrawer = () => {
         <div style={{ display: "flex" }}>
           <Menu>
             <MenuButton p={1}>
-              <BellIcon w={"6"} h={"6"} m={1} />
+              <Badge
+                overflowCount={10}
+                size="small"
+                count={notifications?.length}
+              >
+                <BellIcon w={"6"} h={"6"} />
+              </Badge>
             </MenuButton>
-            {/* <MenuList></MenuList> */}
+            <MenuList p={2}>
+              {!notifications.length > 0 && "No new notifications"}
+              {notifications.length > 0 &&
+                [...new Set(notifications.map((item) => item.chat._id))].map(
+                  (chatId) => {
+                    var fullChat = getFullChat(chatId);
+                    var count = notifications.filter((item) => {
+                      return item.chat._id === chatId;
+                    }).length;
+                    var time = changeTime(fullChat?.updatedAt);
+                    return (
+                      <MenuItem
+                        bg={"#ebf0f4"}
+                        borderRadius={"lg"}
+                        p={2}
+                        display={"flex"}
+                        justifyContent={"space-between"}
+                        alignItems={"flex-start"}
+                        m={1}
+                        key={chatId}
+                        onClick={() => {
+                          setSelectedChat(chatId);
+                          setNotifications(
+                            notifications.filter((item) => {
+                              return item.chat._id!== chatId;
+                            })
+                          );
+                      console.log("Filter nitif")
+
+                          // updateNotifications(chatId);
+                        }}
+                      >
+                        <div>
+                          {fullChat?.isGroupChat ? (
+                            <div>
+                              <span>
+                                New message in <b>{fullChat.chatName}</b>
+                              </span>
+                            </div>
+                          ) : (
+                            <div>
+                              <span>
+                                <span>
+                                  New message from
+                                  <b> {getSender(user, fullChat).name} </b>
+                                </span>
+                              </span>
+                            </div>
+                          )}
+                          <div> {<Text fontSize={"xs"}>{time}</Text>}</div>
+                        </div>
+                        <div>
+                          {count >= 1 && (
+                            <Badge
+                              size="small"
+                              overflowCount={10}
+                              color="#3182ce"
+                              count={count}
+                            />
+                          )}
+                        </div>
+                      </MenuItem>
+                    );
+                  }
+                )}
+            </MenuList>
           </Menu>
           <Menu>
-            <ProfileModal   user={user}>
-              <MenuButton mt={"5px" } p={1} >
-                <Avatar  size={"xs"} name={user.name} src={user.picture} />
+            <ProfileModal user={user}>
+              <MenuButton mt={"5px"} p={1}>
+                <Avatar size={"xs"} name={user.name} src={user.picture} />
               </MenuButton>
             </ProfileModal>
           </Menu>
@@ -175,8 +314,8 @@ const SideDrawer = () => {
           <DrawerBody>
             <Box display={"flex"} pb={"2"} mb={3}>
               <Input
-                mr={"2"}
-                size={"xs"}
+                size={{ base: "xl", md: "xs" }}
+                p={2}
                 placeholder="Search by name or email"
                 onChange={(e) => {
                   if (e.target.value) {

@@ -39,23 +39,25 @@ export const isLastMessage = (messages, i, userId) => {
 export const isSameUser = (messages, m, i) => {
   return i > 0 && messages[i - 1].sender._id === m.sender._id;
 };
-export const changeTime=(str) =>{
+export const changeTime = (str) => {
   let date = new Date(str);
   let offset = date.getTimezoneOffset();
-  let indiaTime = new Date(date.getTime() + offset * 60 * 1000 + 330 * 60 * 1000);
+  let indiaTime = new Date(
+    date.getTime() + offset * 60 * 1000 + 330 * 60 * 1000
+  );
 
-  let day=date.getDate();
-  let month=date.getMonth();
-  let year=date.getFullYear();
+  let day = date.getDate();
+  let month = date.getMonth()+1;
+  let year = date.getFullYear();
   let hours = indiaTime.getHours();
   let minutes = indiaTime.getMinutes();
 
-  let ampm = hours >= 12 ? 'PM' : 'AM';
+  let ampm = hours >= 12 ? "PM" : "AM";
 
   hours %= 12;
   hours = hours || 12; // the hour '0' should be '12'
 
-  minutes = minutes < 10 ? '0' + minutes : minutes;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
 
   return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-}
+};

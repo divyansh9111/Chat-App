@@ -16,7 +16,7 @@ const HomePage = () => {
       }
   },[history]);
   return (
-    <Container maxW={"xl"} centerContent>
+    <Container maxWidth={"xl"} centerContent>
       <Box
         display={"flex"}
         justifyContent={"center"}
@@ -25,13 +25,13 @@ const HomePage = () => {
         bg={"white"}
         borderRadius="lg"
         borderWidth={"1px"}
-        w={"80vh"}
+        width={{base:"100%",md:"60%"}}
       >
         <Text fontFamily={"Montserrat"} color="black" fontSize="xl">
           Chit-Chat
         </Text>
       </Box>
-      <Box marginBottom={'15'} bg={"white"} p={2} w={"80vh"} borderRadius="lg" borderWidth={"1px"}>
+      <Box marginBottom={'15'} bg={"white"} p={2} w={{base:"100%",md:"60%"}}borderRadius="lg" borderWidth={"1px"}>
         <Tabs  size="sm" isFitted variant="soft-rounded" colorScheme='green'>
           <TabList mb='1em'>
             <Tab>Sign Up</Tab>
