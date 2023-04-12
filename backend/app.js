@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,16 +20,26 @@ app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/notification", notificationRoutes);
-app.use(notFound);
+// app.use(notFound);
 app.use(function (req, res, next) {
   process.env.TZ = "Asia/Kolkata";
   next();
 });
 app.use(errorHandler);
 
-app.get("/", (req, res) => {
-  res.send("Server Started!");
-});
+// ***************************production********************************
+const _dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(_dirname1, "../frontend/build")));
+  app.get('*',(req,res)=>{
+    res.sendFile(path.resolve(_dirname1,"frontend","build","index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("Server Started!");
+  });
+}
+// ***************************production********************************
 
 const server = app.listen(port, () =>
   console.log(`Example app listening on port ${port}!`)
@@ -62,12 +73,12 @@ io.on("connection", (socket) => {
   });
   socket.on("typing", (room) => {
     socket.in(room).emit("typing");
-    console.log("typing room"+room);
+    console.log("typing room" + room);
   });
   socket.on("stopTyping", (room) => {
     socket.in(room).emit("stopTyping");
   });
-  socket.off('setup',()=>{
+  socket.off("setup", () => {
     console.log("user disconnected!");
   });
 });

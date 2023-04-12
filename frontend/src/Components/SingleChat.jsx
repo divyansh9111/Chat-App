@@ -228,7 +228,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         console.log(notifications);
         console.log("before");
         // setNotifications([...notifications, newReceivedMessage]);
-        setNotifications((prevArray) => [...prevArray, newReceivedMessage]);
+        setNotifications((prevArray) => [newReceivedMessage,...prevArray]);
         console.log("after");
         console.log(notifications);
         // set_notifications(newReceivedMessage._id);
