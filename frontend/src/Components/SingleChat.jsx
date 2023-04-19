@@ -92,11 +92,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           { content: newMessage, chatId: selectedChat },
           config
         );
+        setMessages([...messages, data]);
         setNewMessage("");
         console.log(data);
-        // console.log(typeof data);
         socket.emit("newMessage", data);
-        setMessages([...messages, data]);
+        // console.log(typeof data);
         setTimeout(() => {
           messageContainer.current.scrollTop =
             messageContainer.current.scrollHeight;
@@ -234,7 +234,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         // set_notifications(newReceivedMessage._id);
         setFetchAgain(!fetchAgain);
       } else {
-        setMessages([...messages, newReceivedMessage]);
+        
+        setMessages((prevArray)=>[...prevArray, newReceivedMessage]);
+        // fetchMessages();
         setTimeout(() => {
           if (messageContainer) {
             messageContainer.current.scrollTop =
