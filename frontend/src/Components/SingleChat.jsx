@@ -278,20 +278,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             ) : (
               <>
                 {getSender(user, getSelectedChat(selectedChat)).name}
-                <ProfileModal
+                <ProfileModal 
                   user={getSender(user, getSelectedChat(selectedChat))}
                 />
               </>
             )}
           </Text>
           <Box
+          className="neumorphic--pressed"
             display={"flex"}
             flexDirection={"column"}
             height={"100%"}
             width={"100%"}
             p={2}
+            pt={0}
             borderRadius={"md"}
-            bg={"#ebf0f4"}
+            bg={"white"}
             overflowY={"hidden"}
             mt={"2"}
             justifyContent={"flex-end"}
@@ -324,7 +326,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 >
                   {messages &&
                     messages.map((m, i) => (
-                      <div style={{ display: "flex" }} key={m._id}>
+                      <div  style={{ display: "flex" }} key={m._id}>
                         {(isSameSender(messages, m, i, user._id) ||
                           isLastMessage(messages, i, user._id)) && (
                           <Tooltip
@@ -333,6 +335,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                             hasArrow
                           >
                             <Avatar
+                            className="avatar"
                               mt="7px"
                               mr={1}
                               size="sm"
@@ -343,6 +346,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                           </Tooltip>
                         )}
                         <span
+                        className="element element-1"
                           style={{
                             display: "flex",
                             flexDirection: "column",
@@ -376,6 +380,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             <FormControl onKeyDown={sendMessage}>
               {isTyping && "Typing..."}
               <Input
+              className="neumorphic--pressed"
+              borderRadius={"5px"}
                 autoFocus
                 autoComplete="off"
                 placeholder="Type a message"

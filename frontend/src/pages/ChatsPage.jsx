@@ -53,13 +53,13 @@ const ChatsPage = () => {
   //   fetchNotifications();
   // });
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%" ,display:"flex",flexDirection:"column",margin:"0px 20px", alignItems:"center"}}>
       {user && <SideDrawer />}
       <Box
         display={"flex"}
         justifyContent={"space-between"}
         w={"100%"}
-        h={"90vh"}
+        h={"88vh"}
         p={"10px"}
       >
         {user && (

@@ -8,6 +8,7 @@ import { getSender } from "../config/chatLogic";
 import { ChatState } from "../context/ChatProvider";
 import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscllaneous/GroupChatModal";
+import "../myChats.css";
 const MyChats = ({ fetchAgain }) => {
   const {
     user,
@@ -48,7 +49,7 @@ const MyChats = ({ fetchAgain }) => {
       });
     }
   };
- 
+
   const changeTime = (str) => {
     let date = new Date(str);
     let offset = date.getTimezoneOffset();
@@ -109,16 +110,17 @@ const MyChats = ({ fetchAgain }) => {
     // console.log(userInfo);
     fetchChats();
   }, [fetchAgain]);
-  
+
   return (
     <Box
+      className="element"
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       w={{ base: "100%", md: "30%" }}
       alignItems={"center"}
-      bg={"white"}
       flexDirection={"column"}
       borderRadius={"md"}
       p={3}
+      bg={"white"}
     >
       <Box
         display={"flex"}
@@ -129,25 +131,26 @@ const MyChats = ({ fetchAgain }) => {
       >
         All chats
         <GroupChatModal>
-          <Button variant={"solid"} size={"xs"} leftIcon={<AddIcon />}>
+          <Button className="avatar" variant={"solid"} size={"xs"} leftIcon={<AddIcon />}>
             New Group Chat
           </Button>
         </GroupChatModal>
       </Box>
       <Box
+      className="neumorphic--pressed"
         display={"flex"}
         alignItems={"center"}
         flexDirection={"column"}
-        p={2}
+        bg={"white"}
+        // p={2}
         mt={"2"}
         w={"100%"}
         h={"100%"}
         borderRadius={"md"}
-        bg={"#ebf0f4"}
         overflowY={"hidden"}
       >
         {chats.length > 0 ? (
-          <Stack mt={1} overflowY={"scroll"} width={"95%"}>
+          <Stack m={0} p={2} alignItems="center" overflowY={"scroll"} width={"100%"}>
             {chats.map((chat) => {
               var count =
                 notifications.length > 0 &&
@@ -158,21 +161,24 @@ const MyChats = ({ fetchAgain }) => {
               var time = changeTime(chat.updatedAt);
               return (
                 <Box
+                  className="element element-1"
                   key={chat._id}
                   display={"flex"}
                   cursor={"pointer"}
                   alignItems={"center"}
                   justifyContent={"space-between"}
                   gap={"1"}
-                  width={"100%"}
-                  maxWidth={"105%"}
+                  width={"95%"}
+                  maxWidth={"100%"}
                   onClick={() => {
                     setSelectedChat(chat._id);
                     // updateNotifications(chat._id);
-                    setNotifications(notifications.filter((item)=>{
-                      console.log("Filter nitif")
-                      return item.chat._id!==chat._id;
-                    }));
+                    setNotifications(
+                      notifications.filter((item) => {
+                        console.log("Filter nitif");
+                        return item.chat._id !== chat._id;
+                      })
+                    );
                   }} //always pass arrow functions
                   py={count >= 1 ? 1 : 2}
                   px={3}
@@ -182,6 +188,7 @@ const MyChats = ({ fetchAgain }) => {
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <Avatar
+                    className="avatar"
                       cursor={"pointer"}
                       marginRight={2}
                       size={{ base: "md", md: "xs" }}

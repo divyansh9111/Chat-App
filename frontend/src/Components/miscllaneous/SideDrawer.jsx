@@ -189,12 +189,17 @@ const SideDrawer = () => {
   return (
     <>
       <Box
+      className="element"
         display={"flex"}
         justifyContent={"space-between"}
         bg={"white"}
         alignItems={"center"}
-        w={"100%"}
+        w={"98%"}
+        borderRadius={"md"}
         p={" 6px"}
+        m={"10px"}
+        mb={0}
+        
       >
         <Tooltip
           openDelay={1000}

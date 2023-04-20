@@ -16,9 +16,10 @@ const HomePage = () => {
       }
   },[history]);
   return (
-    <Container maxWidth={"xl"} centerContent>
+    <Container  maxWidth={"xl"} centerContent>
       <Box
         display={"flex"}
+        className=" element"
         justifyContent={"center"}
         p={1}
         m="40px 0 15px 0"
@@ -31,8 +32,8 @@ const HomePage = () => {
           Chit-Chat
         </Text>
       </Box>
-      <Box marginBottom={'15'} bg={"white"} p={2} w={{base:"100%",md:"60%"}}borderRadius="lg" borderWidth={"1px"}>
-        <Tabs  size="sm" isFitted variant="soft-rounded" colorScheme='green'>
+      <Box className=" element" marginBottom={'15'} bg={"white"} p={3} w={{base:"100%",md:"60%"}}borderRadius="lg" borderWidth={"1px"}>
+        <Tabs   size="sm" isFitted variant="soft-rounded" colorScheme='green'>
           <TabList mb='1em'>
             <Tab>Sign Up</Tab>
             <Tab>Login</Tab>
