@@ -93,6 +93,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
         setMessages([...messages, data]);
+        console.log(JSON.stringify(data));
         setNewMessage("");
         console.log(data);
         socket.emit("newMessage", data);
@@ -161,12 +162,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       });
     }
   };
-  const set_notifications = async (msgId) => {
-    if (
-      !notifications?.find((n) => {
-        return n._id === msgId;
-      })
-    ) {
+  const set_notifications = async (newReceivedMessage) => {
+    if 
+    (newReceivedMessage) {
       try {
         const config = {
           headers: {
@@ -175,13 +173,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
         const { data } = await axios.post(
           "/api/notification",
-          { messageId: msgId, userId: user._id },
+          {...newReceivedMessage},
           config
         );
-        // let newData = data;
-        // setNotifications(newData);
+        let newData = data;
+        setNotifications(newData);
       } catch (error) {
-        if (error.response.data.message === "User is not authorized!") {
+        if (error.message === "User is not authorized!") {
           Cookies.remove("userInfo");
           history.go("/");
         }
@@ -189,7 +187,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           title: "Error!",
           variant: "subtle",
           position: "bottom-left",
-          description: error.response.data.message,
+          description: error.message,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -228,10 +226,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         console.log(notifications);
         console.log("before");
         // setNotifications([...notifications, newReceivedMessage]);
-        setNotifications((prevArray) => [newReceivedMessage,...prevArray]);
+        // setNotifications((prevArray) => [newReceivedMessage,...prevArray]);
+        set_notifications(newReceivedMessage);
         console.log("after");
         console.log(notifications);
-        // set_notifications(newReceivedMessage._id);
         setFetchAgain(!fetchAgain);
       } else {
         

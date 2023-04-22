@@ -69,11 +69,8 @@ const MyChats = ({ fetchAgain }) => {
     return `${hours}:${minutes} ${ampm}`;
   };
   const updateNotifications = async (chatId) => {
-    let msgId = notifications.find((n) => {
-      return n.chat === chatId;
-    })._id;
 
-    if (msgId) {
+    if (chatId) {
       try {
         const config = {
           headers: {
@@ -81,13 +78,13 @@ const MyChats = ({ fetchAgain }) => {
           },
         };
         const { data } = await axios.delete(
-          `/api/notification?messageId=${msgId}&userId=${user._id}`,
+          `/api/notification?chatId=${chatId}`,
           config
         );
-        // let newData = data;
-        // setNotifications(newData);
+        let newData = data;
+        setNotifications(newData);
       } catch (error) {
-        if (error.response.data.message === "User is not authorized!") {
+        if (error.message === "User is not authorized!") {
           Cookies.remove("userInfo");
           history.go("/");
         }
@@ -95,7 +92,7 @@ const MyChats = ({ fetchAgain }) => {
           title: "Error!",
           variant: "subtle",
           position: "bottom-left",
-          description: error.response.data.message,
+          description: error.message,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -172,13 +169,13 @@ const MyChats = ({ fetchAgain }) => {
                   maxWidth={"100%"}
                   onClick={() => {
                     setSelectedChat(chat._id);
-                    // updateNotifications(chat._id);
-                    setNotifications(
-                      notifications.filter((item) => {
-                        console.log("Filter nitif");
-                        return item.chat._id !== chat._id;
-                      })
-                    );
+                    updateNotifications(chat._id);
+                    // setNotifications(
+                    //   notifications.filter((item) => {
+                    //     console.log("Filter nitif");
+                    //     return item.chat._id !== chat._id;
+                    //   })
+                    // );
                   }} //always pass arrow functions
                   py={count >= 1 ? 1 : 2}
                   px={3}
