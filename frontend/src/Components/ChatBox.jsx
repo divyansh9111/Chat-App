@@ -6,14 +6,14 @@ const ChatBox = ({fetchAgain,setFetchAgain}) => {
   const{selectedChat}=ChatState();
   return (
     <Box
+    className="element"
     display={{base:selectedChat?"flex":"none",md:"flex"}}
     width={{base:"100%",md:"68%"}}
     flexDirection={"column"}
     alignItems={"center"}
     borderRadius={"md"}
     bg={"white"}
-    p={3}
-    >
+    p={3}    >
       <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>
     </Box>
   )

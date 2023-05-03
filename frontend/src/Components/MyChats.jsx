@@ -8,6 +8,7 @@ import { getSender } from "../config/chatLogic";
 import { ChatState } from "../context/ChatProvider";
 import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscllaneous/GroupChatModal";
+import "../myChats.css";
 const MyChats = ({ fetchAgain }) => {
   const {
     user,
@@ -48,7 +49,7 @@ const MyChats = ({ fetchAgain }) => {
       });
     }
   };
- 
+
   const changeTime = (str) => {
     let date = new Date(str);
     let offset = date.getTimezoneOffset();
@@ -68,11 +69,8 @@ const MyChats = ({ fetchAgain }) => {
     return `${hours}:${minutes} ${ampm}`;
   };
   const updateNotifications = async (chatId) => {
-    let msgId = notifications.find((n) => {
-      return n.chat === chatId;
-    })._id;
 
-    if (msgId) {
+    if (chatId) {
       try {
         const config = {
           headers: {
@@ -80,13 +78,13 @@ const MyChats = ({ fetchAgain }) => {
           },
         };
         const { data } = await axios.delete(
-          `/api/notification?messageId=${msgId}&userId=${user._id}`,
+          `/api/notification?chatId=${chatId}`,
           config
         );
-        // let newData = data;
-        // setNotifications(newData);
+        let newData = data;
+        setNotifications(newData);
       } catch (error) {
-        if (error.response.data.message === "User is not authorized!") {
+        if (error.message === "User is not authorized!") {
           Cookies.remove("userInfo");
           history.go("/");
         }
@@ -94,7 +92,7 @@ const MyChats = ({ fetchAgain }) => {
           title: "Error!",
           variant: "subtle",
           position: "bottom-left",
-          description: error.response.data.message,
+          description: error.message,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -109,16 +107,17 @@ const MyChats = ({ fetchAgain }) => {
     // console.log(userInfo);
     fetchChats();
   }, [fetchAgain]);
-  
+
   return (
     <Box
+      className="element"
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       w={{ base: "100%", md: "30%" }}
       alignItems={"center"}
-      bg={"white"}
       flexDirection={"column"}
       borderRadius={"md"}
       p={3}
+      bg={"white"}
     >
       <Box
         display={"flex"}
@@ -129,25 +128,26 @@ const MyChats = ({ fetchAgain }) => {
       >
         All chats
         <GroupChatModal>
-          <Button variant={"solid"} size={"xs"} leftIcon={<AddIcon />}>
+          <Button className="avatar" variant={"solid"} size={"xs"} leftIcon={<AddIcon />}>
             New Group Chat
           </Button>
         </GroupChatModal>
       </Box>
       <Box
+      className="neumorphic--pressed"
         display={"flex"}
         alignItems={"center"}
         flexDirection={"column"}
-        p={2}
+        bg={"white"}
+        // p={2}
         mt={"2"}
         w={"100%"}
         h={"100%"}
         borderRadius={"md"}
-        bg={"#ebf0f4"}
         overflowY={"hidden"}
       >
         {chats.length > 0 ? (
-          <Stack mt={1} overflowY={"scroll"} width={"95%"}>
+          <Stack m={0} p={2} alignItems="center" overflowY={"scroll"} width={"100%"}>
             {chats.map((chat) => {
               var count =
                 notifications.length > 0 &&
@@ -158,21 +158,24 @@ const MyChats = ({ fetchAgain }) => {
               var time = changeTime(chat.updatedAt);
               return (
                 <Box
+                  className="element element-1"
                   key={chat._id}
                   display={"flex"}
                   cursor={"pointer"}
                   alignItems={"center"}
                   justifyContent={"space-between"}
                   gap={"1"}
-                  width={"100%"}
-                  maxWidth={"105%"}
+                  width={"95%"}
+                  maxWidth={"100%"}
                   onClick={() => {
                     setSelectedChat(chat._id);
-                    // updateNotifications(chat._id);
-                    setNotifications(notifications.filter((item)=>{
-                      console.log("Filter nitif")
-                      return item.chat._id!==chat._id;
-                    }));
+                    updateNotifications(chat._id);
+                    // setNotifications(
+                    //   notifications.filter((item) => {
+                    //     console.log("Filter nitif");
+                    //     return item.chat._id !== chat._id;
+                    //   })
+                    // );
                   }} //always pass arrow functions
                   py={count >= 1 ? 1 : 2}
                   px={3}
@@ -182,6 +185,7 @@ const MyChats = ({ fetchAgain }) => {
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <Avatar
+                    className="avatar"
                       cursor={"pointer"}
                       marginRight={2}
                       size={{ base: "md", md: "xs" }}

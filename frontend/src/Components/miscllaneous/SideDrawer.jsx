@@ -152,11 +152,7 @@ const SideDrawer = () => {
     return `${hours}:${minutes} ${ampm}`;
   };
   const updateNotifications = async (chatId) => {
-    let msgId = notifications.find((n) => {
-      return n.chat || n.chat._id === chatId;
-    })._id;
-
-    if (msgId) {
+    if (chatId) {
       try {
         const config = {
           headers: {
@@ -164,13 +160,13 @@ const SideDrawer = () => {
           },
         };
         const { data } = await axios.delete(
-          `/api/notification?messageId=${msgId}&userId=${user._id}`,
+          `/api/notification?chatId=${chatId}`,
           config
         );
-        // let newData = data;
-        // setNotifications(newData);
+        let newData = data;
+        setNotifications(newData);
       } catch (error) {
-        if (error.response.data.message === "User is not authorized!") {
+        if (error.message === "User is not authorized!") {
           Cookies.remove("userInfo");
           history.go("/");
         }
@@ -178,7 +174,7 @@ const SideDrawer = () => {
           title: "Error!",
           variant: "subtle",
           position: "bottom-left",
-          description: error.response.data.message,
+          description: error.message,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -186,15 +182,20 @@ const SideDrawer = () => {
       }
     }
   };
+  console.log(notifications);
   return (
     <>
       <Box
+        className="element"
         display={"flex"}
         justifyContent={"space-between"}
         bg={"white"}
         alignItems={"center"}
-        w={"100%"}
+        w={"98%"}
+        borderRadius={"md"}
         p={" 6px"}
+        m={"10px"}
+        mb={0}
       >
         <Tooltip
           openDelay={1000}
@@ -223,68 +224,73 @@ const SideDrawer = () => {
             <MenuList p={2}>
               {!notifications.length > 0 && "No new notifications"}
               {notifications.length > 0 &&
-                [...new Set(notifications.map((item) => item.chat._id))].map(
-                  (chatId) => {
-                    var fullChat = getFullChat(chatId);
-                    var count = notifications.filter((item) => {
-                      return item.chat._id === chatId;
-                    }).length;
-                    var time = changeTime(fullChat?.updatedAt);
-                    return (
-                      <MenuItem
-                        bg={"#ebf0f4"}
-                        borderRadius={"lg"}
-                        p={2}
-                        display={"flex"}
-                        justifyContent={"space-between"}
-                        alignItems={"flex-start"}
-                        m={1}
-                        key={chatId}
-                        onClick={() => {
-                          setSelectedChat(chatId);
-                          setNotifications(
-                            notifications.filter((item) => {
-                              return item.chat._id!== chatId;
-                            })
-                          );
-                      console.log("Filter nitif")
-
-                          // updateNotifications(chatId);
-                        }}
-                      >
-                        <div>
-                          {fullChat?.isGroupChat ? (
-                            <div>
+                chats.length > 0 &&
+                [
+                  ...new Set(
+                    notifications.map((item) => {
+                      console.log(item.chat._id);
+                      return item.chat._id;
+                    })
+                  ),
+                ].map((chatId) => {
+                  var fullChat = getFullChat(chatId);
+                  console.log(chatId);
+                  var count = notifications.filter((item) => {
+                    return item.chat._id === chatId;
+                  }).length;
+                  var time = changeTime(fullChat?.updatedAt);
+                  return (
+                    <MenuItem
+                      bg={"#ebf0f4"}
+                      borderRadius={"lg"}
+                      p={2}
+                      display={"flex"}
+                      justifyContent={"space-between"}
+                      alignItems={"flex-start"}
+                      m={1}
+                      key={chatId}
+                      onClick={() => {
+                        setSelectedChat(chatId);
+                        // setNotifications(
+                        //   notifications.filter((item) => {
+                        //     return item.chat._id!== chatId;
+                        //   })
+                        // );
+                        updateNotifications(chatId);
+                      }}
+                    >
+                      <div>
+                        {fullChat?.isGroupChat ? (
+                          <div>
+                            <span>
+                              New message in <b>{fullChat.chatName}</b>
+                            </span>
+                          </div>
+                        ) : (
+                          <div>
+                            <span>
                               <span>
-                                New message in <b>{fullChat.chatName}</b>
+                                New message from
+                                <b> {getSender(user, fullChat).name} </b>
                               </span>
-                            </div>
-                          ) : (
-                            <div>
-                              <span>
-                                <span>
-                                  New message from
-                                  <b> {getSender(user, fullChat).name} </b>
-                                </span>
-                              </span>
-                            </div>
-                          )}
-                          <div> {<Text fontSize={"xs"}>{time}</Text>}</div>
-                        </div>
-                        <div>
-                          {count >= 1 && (
-                            <Badge
-                              size="small"
-                              overflowCount={10}
-                              color="#3182ce"
-                              count={count}
-                            />
-                          )}
-                        </div>
-                      </MenuItem>
-                    );
-                  }
-                )}
+                            </span>
+                          </div>
+                        )}
+                        <div> {<Text fontSize={"xs"}>{time}</Text>}</div>
+                      </div>
+                      <div>
+                        {count >= 1 && (
+                          <Badge
+                            size="small"
+                            overflowCount={10}
+                            color="#3182ce"
+                            count={count}
+                          />
+                        )}
+                      </div>
+                    </MenuItem>
+                  );
+                })}
             </MenuList>
           </Menu>
           <Menu>

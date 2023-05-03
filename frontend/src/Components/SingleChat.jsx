@@ -93,6 +93,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
         setMessages([...messages, data]);
+        console.log(JSON.stringify(data));
         setNewMessage("");
         console.log(data);
         socket.emit("newMessage", data);
@@ -161,12 +162,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       });
     }
   };
-  const set_notifications = async (msgId) => {
-    if (
-      !notifications?.find((n) => {
-        return n._id === msgId;
-      })
-    ) {
+  const set_notifications = async (newReceivedMessage) => {
+    if 
+    (newReceivedMessage) {
       try {
         const config = {
           headers: {
@@ -175,13 +173,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
         const { data } = await axios.post(
           "/api/notification",
-          { messageId: msgId, userId: user._id },
+          {...newReceivedMessage},
           config
         );
-        // let newData = data;
-        // setNotifications(newData);
+        let newData = data;
+        setNotifications(newData);
       } catch (error) {
-        if (error.response.data.message === "User is not authorized!") {
+        if (error.message === "User is not authorized!") {
           Cookies.remove("userInfo");
           history.go("/");
         }
@@ -189,7 +187,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           title: "Error!",
           variant: "subtle",
           position: "bottom-left",
-          description: error.response.data.message,
+          description: error.message,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -228,10 +226,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         console.log(notifications);
         console.log("before");
         // setNotifications([...notifications, newReceivedMessage]);
-        setNotifications((prevArray) => [newReceivedMessage,...prevArray]);
+        // setNotifications((prevArray) => [newReceivedMessage,...prevArray]);
+        set_notifications(newReceivedMessage);
         console.log("after");
         console.log(notifications);
-        // set_notifications(newReceivedMessage._id);
         setFetchAgain(!fetchAgain);
       } else {
         
@@ -278,20 +276,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             ) : (
               <>
                 {getSender(user, getSelectedChat(selectedChat)).name}
-                <ProfileModal
+                <ProfileModal 
                   user={getSender(user, getSelectedChat(selectedChat))}
                 />
               </>
             )}
           </Text>
           <Box
+          className="neumorphic--pressed"
             display={"flex"}
             flexDirection={"column"}
             height={"100%"}
             width={"100%"}
             p={2}
+            pt={0}
             borderRadius={"md"}
-            bg={"#ebf0f4"}
+            bg={"white"}
             overflowY={"hidden"}
             mt={"2"}
             justifyContent={"flex-end"}
@@ -324,7 +324,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 >
                   {messages &&
                     messages.map((m, i) => (
-                      <div style={{ display: "flex" }} key={m._id}>
+                      <div  style={{ display: "flex" }} key={m._id}>
                         {(isSameSender(messages, m, i, user._id) ||
                           isLastMessage(messages, i, user._id)) && (
                           <Tooltip
@@ -333,6 +333,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                             hasArrow
                           >
                             <Avatar
+                            className="avatar"
                               mt="7px"
                               mr={1}
                               size="sm"
@@ -343,6 +344,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                           </Tooltip>
                         )}
                         <span
+                        className="element element-1"
                           style={{
                             display: "flex",
                             flexDirection: "column",
@@ -376,6 +378,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             <FormControl onKeyDown={sendMessage}>
               {isTyping && "Typing..."}
               <Input
+              className="neumorphic--pressed"
+              borderRadius={"5px"}
                 autoFocus
                 autoComplete="off"
                 placeholder="Type a message"
@@ -390,6 +394,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </Box>
         </>
       ) : (
+        
         <Box
           height={"100%"}
           width={"100%"}
@@ -397,9 +402,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           justifyContent={"center"}
           display={"flex"}
         >
-          <Text fontSize={"2xl"} color={"black"}>
+        {chats.length>0?<Text fontSize={"2xl"} color={"black"}>
             Click a user to start a chat
-          </Text>
+          </Text>:
+          <Text fontSize={"2xl"} color={"black"}>
+            Search a user to start a chat
+          </Text>}
         </Box>
       )}
     </>

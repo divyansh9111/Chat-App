@@ -31,12 +31,7 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    notifications: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Message",
-      },
-    ],
+    notifications: { type: [mongoose.Schema.Types.Mixed], default: [] }
   },
   { timestamps: true }
 );

@@ -1,16 +1,21 @@
 import {
   Button,
+  Code,
   FormControl,
+  FormHelperText,
   FormLabel,
+  HStack,
   Input,
   InputGroup,
   InputRightElement,
+  PinInput,
+  PinInputField,
   VStack,
 } from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { CheckIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import Axios from 'axios';
+import Axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { ChatState } from "../../context/ChatProvider";
 const SignUp = () => {
@@ -22,17 +27,30 @@ const SignUp = () => {
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
   const [loading, setLoading] = useState(false);
-  const history=useHistory();
+  const history = useHistory();
   const toast = useToast();
-  const{Cookies}=ChatState();
-  const postDetails = async(pic) => {
+  const { Cookies } = ChatState();
+  const [message, setMessage] = useState(
+    "We'll send a verification code to your email."
+  );
+  const [codeLoading, setCodeLoading] = useState(false);
+  const [verificationCode, setVerificationCode] = useState();
+  const [disabled, setDisabled] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
+  const [InputOtp, setInputOtp] = useState("");
+  function isValidEmail(email) {
+    // regular expression to check if email is valid
+    const emailRegex = /\S+@\S+\.\S+/;
+    setDisabled(!emailRegex.test(email));
+  }
+  const postDetails = async (pic) => {
     setLoading(true);
 
     if (pic === undefined) {
       toast({
         title: "Please select an image.",
-        variant:"subtle",
-        position:"bottom-left",
+        variant: "subtle",
+        position: "bottom-left",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -57,19 +75,21 @@ const SignUp = () => {
       //     setPic(data.url.toString());
       //     setLoading(false);
       //   });
-      let getData='';
-      await Axios.post("https://api.cloudinary.com/v1_1/mernproject1/image/upload",data).then((response)=>{
-        getData=response.data["secure_url"];
+      let getData = "";
+      await Axios.post(
+        "https://api.cloudinary.com/v1_1/mernproject1/image/upload",
+        data
+      ).then((response) => {
+        getData = response.data["secure_url"];
         setPicture(getData);
-          setLoading(false);
-          console.log(getData);
+        setLoading(false);
+        console.log(getData);
       });
-
     } else {
       toast({
         title: "Please select an image.",
-        variant:"subtle",
-        position:"bottom-left",
+        variant: "subtle",
+        position: "bottom-left",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -78,25 +98,25 @@ const SignUp = () => {
       return;
     }
   };
-  const handleSubmit=async()=>{
+  const handleSubmit = async () => {
     setLoading(true);
-    if (!name||!email||!password||!confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       toast({
         title: "Please fill all the fields.",
-        variant:"subtle",
-        position:"bottom-left",
+        variant: "subtle",
+        position: "bottom-left",
         status: "warning",
         duration: 5000,
         isClosable: true,
       });
       setLoading(false);
       return;
-    } 
-    if(password!==confirmPassword){
+    }
+    if (password !== confirmPassword) {
       toast({
         title: "Passwords are not matching.",
-        variant:"subtle",
-        position:"bottom-left",
+        variant: "subtle",
+        position: "bottom-left",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -105,37 +125,86 @@ const SignUp = () => {
       return;
     }
     try {
-      const config={
-        headers:{
-          'Content-type':"application/json",
-        }
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
       };
-      const {data}=await Axios.post("/api/user",{name,email,password,confirmPassword,picture},config);
+      const { data } = await Axios.post(
+        "/api/user",
+        { name, email, password, confirmPassword, picture },
+        config
+      );
       toast({
         title: "Registration successful.",
-        variant:"subtle",
-        position:"bottom-left",
+        variant: "subtle",
+        position: "bottom-left",
         status: "success",
         duration: 5000,
         isClosable: true,
       });
-      Cookies.set('userInfo',JSON.stringify(data),{expires:new Date(Date.now() + 60*1000*60)});
+      Cookies.set("userInfo", JSON.stringify(data), {
+        expires: new Date(Date.now() + 60 * 1000 * 60),
+      });
       setLoading(false);
-      history.go('/chats');
+      history.go("/chats");
     } catch (error) {
-         toast({
+      toast({
         title: "Error!",
-        variant:"subtle",
-        position:"bottom-left",
-        description:error.response.data.message,
+        variant: "subtle",
+        position: "bottom-left",
+        description: error.response.data.message,
         status: "error",
         duration: 5000,
         isClosable: true,
       });
       setLoading(false);
     }
-  }
-
+  };
+  const sendCode = async () => {
+    try {
+      setDisabled(true);
+      setCodeLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await Axios.post(
+        "/api/user/send-verification-code",
+        { email },
+        config
+      );
+      if (data) {
+        setVerificationCode(data);
+        setMessage("An OTP has been sent to your email...");
+        toast({
+          title: "OTP sent!",
+          variant: "subtle",
+          position: "top-left",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+      setCodeLoading(false);
+    } catch (error) {
+      setCodeLoading(false);
+      if (error.message === "User is not authorized!") {
+        Cookies.remove("userInfo");
+        history.go("/");
+      }
+      toast({
+        title: "Error!",
+        variant: "subtle",
+        position: "bottom-left",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
   return (
     <VStack spacing={"5px"}>
       <FormControl isRequired>
@@ -152,16 +221,133 @@ const SignUp = () => {
       </FormControl>
       <FormControl isRequired>
         <FormLabel id="email">Email</FormLabel>
-        <Input
-          variant="filled"
-          size="sm"
-          type={"email"}
-          placeholder={"Enter Your Email"}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-        />
+        <InputGroup>
+          <Input
+            variant="filled"
+            size="sm"
+            type={"email"}
+            placeholder={"Enter Your Email"}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              isValidEmail(e.target.value);
+            }}
+          />
+          {isVerified ? (
+            <InputRightElement
+              children={<CheckIcon mb={2} mr={1} color="green.500" />}
+            />
+          ) : (
+            <InputRightElement width="4.5rem">
+              <Button
+                isDisabled={disabled}
+                variant={"outline"}
+                mb={2}
+                mr={1}
+                colorScheme="blue"
+                isLoading={codeLoading}
+                size="xs"
+                onClick={() => {
+                  sendCode();
+                }}
+              >
+                Send Code
+              </Button>
+            </InputRightElement>
+          )}
+        </InputGroup>
+        <FormHelperText fontSize={"smaller"}>{message}</FormHelperText>
       </FormControl>
+      {verificationCode&&!isVerified && (
+        <FormControl>
+          <InputGroup>
+            <HStack>
+              <PinInput size={"xs"} otp >
+                <PinInputField
+                  maxLength={1}
+                  onChange={(e) => {
+                    if(e.keyCode==8){
+                      setInputOtp("");
+                    }else{
+                    setInputOtp((prev) => prev + e.target.value);
+                    }
+                  }}
+                />
+                <PinInputField
+                  maxLength={1}
+                  onChange={(e) => {
+                    if(e.keyCode==8){
+                      setInputOtp("");
+                    }else{
+                    setInputOtp((prev) => prev + e.target.value);
+                    }
+                  }}
+                />
+                <PinInputField
+                  maxLength={1}
+                  onChange={(e) => {
+                    if(e.keyCode==8){
+                      setInputOtp("");
+                    }else{
+                    setInputOtp((prev) => prev + e.target.value);
+                    }
+                  }}
+                />
+                <PinInputField
+                  maxLength={1}
+                  onChange={(e) => {
+                    if(e.keyCode==8){
+                      setInputOtp("");
+                    }else{
+                    setInputOtp((prev) => prev + e.target.value);
+                    }
+                  }}
+                />
+              </PinInput>
+            </HStack>
+            {InputOtp.length >= 4 && (
+              <InputRightElement width="4.5rem">
+                <Button
+                  variant={"solid"}
+                  mb={2}
+                  mr={1}
+                  colorScheme="green"
+                  isLoading={codeLoading}
+                  size="xs"
+                  onClick={() => {
+                    if (InputOtp == verificationCode) {
+                      setIsVerified(true);
+                      setMessage("Congrats! your email has been verified.");
+                      setInputOtp("");
+                      toast({
+                        title: "Verified!",
+                        variant: "subtle",
+                        position: "top-left",
+                        status: "success",
+                        duration: 5000,
+                        isClosable: true,
+                      });
+                    } else {
+                      toast({
+                        title: "warning!",
+                        variant: "subtle",
+                        position: "top-left",
+                        description: "please enter a valid OTP!",
+                        status: "warning",
+                        duration: 5000,
+                        isClosable: true,
+                      });
+                      setInputOtp("");
+                    }
+                  }}
+                >
+                  Verify
+                </Button>
+              </InputRightElement>
+            )}
+          </InputGroup>
+        </FormControl>
+      )}
+
       <FormControl isRequired>
         <FormLabel id="password">Password</FormLabel>
         <InputGroup>
@@ -225,6 +411,7 @@ const SignUp = () => {
         />
       </FormControl>
       <Button
+        isDisabled={!isVerified}
         size={"sm"}
         colorScheme={"blue"}
         width="100%"
