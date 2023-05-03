@@ -394,6 +394,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </Box>
         </>
       ) : (
+        
         <Box
           height={"100%"}
           width={"100%"}
@@ -401,9 +402,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           justifyContent={"center"}
           display={"flex"}
         >
-          <Text fontSize={"2xl"} color={"black"}>
+        {chats.length>0?<Text fontSize={"2xl"} color={"black"}>
             Click a user to start a chat
-          </Text>
+          </Text>:
+          <Text fontSize={"2xl"} color={"black"}>
+            Search a user to start a chat
+          </Text>}
         </Box>
       )}
     </>
