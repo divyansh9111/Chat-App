@@ -184,7 +184,7 @@ const sendVerificationCode = asyncHandler(async (req, res) => {
     };
 
     // Send mail
-    let abc = await transporter.sendMail(mailOptions,(error,info)=>{
+    let abc = await transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
         res.status(500).send("Failed to send email");
@@ -197,5 +197,28 @@ const sendVerificationCode = asyncHandler(async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-
-module.exports = { registerUser, authUser, allUsers, sendVerificationCode };
+const resetPassword = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const foundUser = await User.findOne({ email });
+    if (foundUser) {
+      foundUser.password = password;
+      foundUser.confirmPassword = password;
+      await foundUser.save();
+      res.status(200).send(foundUser);
+    } else {
+      res.status(400);
+      throw new Error("No user found with this email!");
+    }
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+module.exports = {
+  registerUser,
+  authUser,
+  allUsers,
+  sendVerificationCode,
+  resetPassword,
+};
