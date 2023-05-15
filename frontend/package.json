@@ -1,8 +1,8 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "private": true,
-  "proxy": "http://127.0.0.1:5000",
+  "private": false,
+  "proxy": "https://chit-chat-dr4q.onrender.com",
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@chakra-ui/icons": "^2.0.16",
