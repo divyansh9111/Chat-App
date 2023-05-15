@@ -1,3 +1,13 @@
 node_modules
 .env
 atlas_url.txt
+# production
+build
+
+# misc
+.env
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
