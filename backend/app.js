@@ -12,6 +12,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -26,6 +27,12 @@ app.use(function (req, res, next) {
   next();
 });
 app.use(errorHandler);
+
+// middleware
+const corsOptions = {
+  origin: "https://chitchat-frontend-byog.onrender.com/", // frontend URI (ReactJS)
+}
+app.use(cors(corsOptions));
 
 // ***************************production********************************
 const _dirname1 = path.resolve();
@@ -48,7 +55,7 @@ const socketIo = require("socket.io");
 const io = socketIo(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://chitchat-frontend-byog.onrender.com/",
   },
 });
 
