@@ -28,11 +28,11 @@ app.use(function (req, res, next) {
 });
 app.use(errorHandler);
 
-// middleware
-const corsOptions = {
-  origin: "https://chitchat-frontend-byog.onrender.com/", // frontend URI (ReactJS)
-}
-app.use(cors(corsOptions));
+// // middleware
+// const corsOptions = {
+//   origin: "https://chitchat-frontend-byog.onrender.com/", // frontend URI (ReactJS)
+// }
+// app.use(cors(corsOptions));
 
 // ***************************production********************************
 const _dirname1 = path.resolve();
