@@ -70,7 +70,7 @@ const Login = () => {
         },
       };
       const { data } = await Axios.post(
-        "/api/user/login",
+        "https://chit-chat-dr4q.onrender.com/api/user/login",
         { email, password },
         config
       );
