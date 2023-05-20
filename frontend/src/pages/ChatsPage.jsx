@@ -23,7 +23,7 @@ const ChatsPage = () => {
             Authorization: `Bearer ${user.token}`,
           },
         };
-        const { data } = await axios.get("/api/notification", config);
+        const { data } = await axios.get("https://chit-chat-dr4q.onrender.com/api/notification", config);
         let newData = data;
         console.log(data);
         data && setNotifications(newData);
