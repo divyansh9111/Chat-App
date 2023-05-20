@@ -50,7 +50,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessages }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`https://chit-chat-dr4q.onrender.com/api/user?search=${search}`, config);
       setLoading(false);
       setSearchResult(data);
       // console.log(data);
@@ -86,7 +86,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessages }) => {
         },
       };
       const { data } = await axios.patch(
-        "/api/chat/rename",
+        "https://chit-chat-dr4q.onrender.com/api/chat/rename",
         { chatId: selectedChat, newChatName: groupChatName },
         config
       );
@@ -136,7 +136,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessages }) => {
           },
         };
         var { data } = await axios.patch(
-          "/api/chat/removeGroup",
+          "https://chit-chat-dr4q.onrender.com/api/chat/removeGroup",
           {
             chatId: getSelectedChat(selectedChat)._id,
             userId: userToBeRemoved._id,
@@ -145,7 +145,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessages }) => {
         );
         //if admin leaves the group make the next person as the new group admin
         if (getSelectedChat(selectedChat).groupAdmin._id===userToBeRemoved._id) {
-          data=await axios.patch("/api/chat/updateAdmin",{chatId: getSelectedChat(selectedChat)._id},config);
+          data=await axios.patch("https://chit-chat-dr4q.onrender.com/api/chat/updateAdmin",{chatId: getSelectedChat(selectedChat)._id},config);
           if(data){
             toast({
               title: "Group admin updated!",
@@ -216,7 +216,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessages }) => {
           },
         };
         const { data } = await axios.patch(
-          "/api/chat/addGroup",
+          "https://chit-chat-dr4q.onrender.com/api/chat/addGroup",
           {
             chatId: getSelectedChat(selectedChat)._id,
             userId: userToBeAdded._id,

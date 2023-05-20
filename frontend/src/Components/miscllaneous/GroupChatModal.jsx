@@ -43,7 +43,7 @@ const GroupChatModal = ({ children }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`https://chit-chat-dr4q.onrender.com/api/user?search=${search}`, config);
       setLoading(false);
       setSearchResult(data);
       // console.log(data);
@@ -95,7 +95,7 @@ const GroupChatModal = ({ children }) => {
         },
       };
       const { data } = await axios.post(
-        "/api/chat/group",
+        "https://chit-chat-dr4q.onrender.com/api/chat/group",
         {
           name: groupChatName,
           users: JSON.stringify(selectedUsers.map((user) => user._id)),

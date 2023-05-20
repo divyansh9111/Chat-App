@@ -111,7 +111,7 @@ const Login = () => {
         },
       };
       const { data } = await Axios.post(
-        "/api/user/send-verification-code",
+        "https://chit-chat-dr4q.onrender.com/api/user/send-verification-code",
         { email },
         config
       );
@@ -177,7 +177,7 @@ const Login = () => {
           "Content-type": "application/json",
         },
       };
-      const { data } = await Axios.patch("/api/user/reset", {email, password }, config);
+      const { data } = await Axios.patch("https://chit-chat-dr4q.onrender.com/api/user/reset", {email, password }, config);
       if (data) {
         toast({
           title: "Password changed successfully.",

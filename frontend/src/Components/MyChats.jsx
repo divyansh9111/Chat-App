@@ -30,7 +30,7 @@ const MyChats = ({ fetchAgain }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get("/api/chat", config);
+      const { data } = await axios.get("https://chit-chat-dr4q.onrender.com/api/chat", config);
       let newData = data;
       setChats(newData);
     } catch (error) {
@@ -78,7 +78,7 @@ const MyChats = ({ fetchAgain }) => {
           },
         };
         const { data } = await axios.delete(
-          `/api/notification?chatId=${chatId}`,
+          `https://chit-chat-dr4q.onrender.com/api/notification?chatId=${chatId}`,
           config
         );
         let newData = data;

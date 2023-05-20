@@ -61,7 +61,7 @@ const SideDrawer = () => {
         },
       };
 
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`https://chit-chat-dr4q.onrender.com/api/user?search=${search}`, config);
       setLoading(false);
       setSearchResult(data);
       // console.log(typeof(searchResult));
@@ -97,7 +97,7 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post("/api/chat", { userId }, config);
+      const { data } = await axios.post("https://chit-chat-dr4q.onrender.com/api/chat", { userId }, config);
       setSelectedChat(data[0]._id);
       // console.log(data[0]);
       // console.log(typeof data);
@@ -160,7 +160,7 @@ const SideDrawer = () => {
           },
         };
         const { data } = await axios.delete(
-          `/api/notification?chatId=${chatId}`,
+          `https://chit-chat-dr4q.onrender.com/api/notification?chatId=${chatId}`,
           config
         );
         let newData = data;

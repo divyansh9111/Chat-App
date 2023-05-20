@@ -28,11 +28,17 @@ app.use(function (req, res, next) {
 });
 app.use(errorHandler);
 
-// // middleware
-const corsOptions = {
-  origin: "https://chitchat-frontend-byog.onrender.com", // frontend URI (ReactJS)
-}
-app.use(cors(corsOptions));
+// middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Request-Headers', '*');
+  if (req.method === "OPTIONS") {
+    res.header('Access-Control-Allow-Methods', '*');
+    return res.status(200).json({});
+  }
+  next();
+});
 
 // ***************************production********************************
 const _dirname1 = path.resolve();

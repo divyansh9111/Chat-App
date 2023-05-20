@@ -131,7 +131,7 @@ const SignUp = () => {
         },
       };
       const { data } = await Axios.post(
-        "/api/user",
+        "https://chit-chat-dr4q.onrender.com/api/user",
         { name, email, password, confirmPassword, picture },
         config
       );
@@ -171,7 +171,7 @@ const SignUp = () => {
         },
       };
       const { data } = await Axios.post(
-        "/api/user/send-verification-code",
+        "https://chit-chat-dr4q.onrender.com/api/user/send-verification-code",
         { email },
         config
       );

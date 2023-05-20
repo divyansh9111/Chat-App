@@ -88,7 +88,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
 
         const { data } = await axios.post(
-          "/api/message",
+          "https://chit-chat-dr4q.onrender.com/api/message",
           { content: newMessage, chatId: selectedChat },
           config
         );
@@ -134,7 +134,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`/api/message/${selectedChat}`, config);
+      const { data } = await axios.get(`https://chit-chat-dr4q.onrender.com/api/message/${selectedChat}`, config);
       setMessages(data);
       // console.log(data);
       // console.log(typeof data);
@@ -172,7 +172,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
         };
         const { data } = await axios.post(
-          "/api/notification",
+          "https://chit-chat-dr4q.onrender.com/api/notification",
           {...newReceivedMessage},
           config
         );
