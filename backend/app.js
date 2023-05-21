@@ -43,8 +43,8 @@ app.use(errorHandler);
 // );
 
 const corsOptions = {
-  origin: ['https://chitchat-frontend-byog.onrender.com'],
-  allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Methods",,"Access-Control-Allow-Origin", "Access-Control-Request-Headers"],
+  origin: ['https://chitchat-frontend-byog.onrender.com/'],
+  allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Methods","Access-Control-Allow-Origin", "Access-Control-Request-Headers"],
   credentials: true,
   enablePreflight: true
 }
