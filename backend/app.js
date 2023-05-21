@@ -29,12 +29,17 @@ app.use(function (req, res, next) {
 app.use(errorHandler);
 
 // middleware
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://chitchat-frontend-byog.onrender.com');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT,PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', 'https://chitchat-frontend-byog.onrender.com');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT,PATCH, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
+app.use(
+  cors({
+    origin:'https://chitchat-frontend-byog.onrender.com' ,
+  })
+);
 // ***************************production********************************
 const _dirname1 = path.resolve();
 
