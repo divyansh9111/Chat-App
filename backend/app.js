@@ -42,15 +42,17 @@ app.use(errorHandler);
 //   })
 // );
 
-const corsOptions = {
-  origin: ['https://chitchat-frontend-byog.onrender.com/'],
-  allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Methods","Access-Control-Allow-Origin", "Access-Control-Request-Headers"],
-  credentials: true,
-  enablePreflight: true
-}
+// const corsOptions = {
+//   origin: ['https://chitchat-frontend-byog.onrender.com/'],
+//   allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Methods","Access-Control-Allow-Origin", "Access-Control-Request-Headers"],
+//   credentials: true,
+//   enablePreflight: true
+// }
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions))
+// app.use(cors(corsOptions));
+// app.options('*', cors(corsOptions));
+app.use(cors());
+
 
 // ***************************production********************************
 const _dirname1 = path.resolve();
