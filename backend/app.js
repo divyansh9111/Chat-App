@@ -53,8 +53,8 @@ app.use(errorHandler);
 // app.options('*', cors(corsOptions));
 app.use(
   cors({
-    origin: "https://chitchat-frontend-byog.onrender.com",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
   })
