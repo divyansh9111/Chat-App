@@ -51,7 +51,14 @@ app.use(errorHandler);
 
 // app.use(cors(corsOptions));
 // app.options('*', cors(corsOptions));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:1234",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+  })
+)
 
 
 // ***************************production********************************
